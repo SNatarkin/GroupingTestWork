@@ -21,15 +21,19 @@ public class Main {
         Map<String, List<Record>> values = items.stream().collect(
                 Collectors.groupingBy(Record::getValues));
 
+
         for (Map.Entry<String, List<Record>> item : values.entrySet()) {
             for (Record record : item.getValue()) {
-                System.out.println(record.getValues());
+                int data = record.getData();
+                String value = record.getValues();
+                String history = record.getHistory();
+                HistoryData historyData = new HistoryData(history, value, data);
+                List<String> urls = Arrays.asList(new String(value));
+
+
             }
-            System.out.println();
+
+
         }
-
-
     }
-
-
-}
+    }
