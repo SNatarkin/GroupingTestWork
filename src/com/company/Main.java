@@ -1,39 +1,53 @@
 package com.company;
 
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
 
+    private static final DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+
+
     public static void main(String[] args) {
-        List<Record> items = Arrays.asList(
-                new Record(1, "17", "sec", "glaza2"),
-                new Record(2, "18", "one", "glaza"),
-                new Record(3, "172", "sec", "nos"),
-                new Record(4, "172", "sec", "nos"),
-                new Record(5, "18", "one", "glaza")
-        );
+        try {
+            List<Record> items = Arrays.asList(
+                    new Record(dateFormat.parse("11-02-1989"), "123", "glaza", "google.com/id1"),
+                    new Record(dateFormat.parse("11-02-1990"), "321", "glaza", "google.com/id2"),
+                    new Record(dateFormat.parse("11-02-1986"), "3123", "nos", "google.com/id3"),
+                    new Record(dateFormat.parse("11-02-1991"), "3123", "nos", "google.com/id4"),
+                    new Record(dateFormat.parse("11-02-1986"), "3123", "glaza", "google.com/id5")
+            );
 
 
-        Map<String, List<Record>> values = items.stream().collect(
-                Collectors.groupingBy(Record::getValues));
+            Map<String, List<Record>> values = items.stream().collect(Collectors.groupingBy(Record::getHistory));
 
 
-        for (Map.Entry<String, List<Record>> item : values.entrySet()) {
-            for (Record record : item.getValue()) {
-                int data = record.getData();
-                String value = record.getValues();
-                String history = record.getHistory();
-                HistoryData historyData = new HistoryData(history, value, data);
-                List<String> urls = Arrays.asList(new String(value));
+            List<String> urls = new ArrayList<>();
+            List<HistoryData> collect = values.entrySet().stream().map(value -> {
+                HistoryData historyData = new HistoryData();
+                historyData.setHistory(value.getKey());
+                Record lastRecord = value.getValue().stream().max(Comparator.comparing(Record::getData)).orElse(null);
+                if (lastRecord != null) {
+                    historyData.setData(lastRecord.getData().toString());
+                }
 
 
-            }
+                return historyData;
+            }).collect(Collectors.toList());
+            System.out.println(collect);
 
 
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
+
     }
-    }
+}
+
+
+
