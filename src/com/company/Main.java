@@ -4,7 +4,10 @@ package com.company;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -25,8 +28,6 @@ public class Main {
 
             Map<String, List<Record>> values = items.stream().collect(Collectors.groupingBy(Record::getHistory));
 
-
-            List<String> urls = new ArrayList<>();
             List<HistoryData> collect = values.entrySet().stream().map(value -> {
                 HistoryData historyData = new HistoryData();
                 historyData.setHistory(value.getKey());
@@ -34,8 +35,9 @@ public class Main {
                 if (lastRecord != null) {
                     historyData.setData(lastRecord.getData().toString());
                 }
-
-
+                List<String> url = value.getValue().stream().map(Record::getImageUrl).collect(Collectors.toList());
+                System.out.println(url);
+                historyData.setUrls(url);
                 return historyData;
             }).collect(Collectors.toList());
             System.out.println(collect);
