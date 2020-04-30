@@ -36,7 +36,6 @@ public class Main {
                     historyData.setData(lastRecord.getData().toString());
                 }
                 List<String> url = value.getValue().stream().map(Record::getImageUrl).collect(Collectors.toList());
-                System.out.println(url);
                 historyData.setUrls(url);
                 return historyData;
             }).collect(Collectors.toList());
